@@ -2,6 +2,7 @@ database.db
 testapp.db
 db.sqlite3
 .env
+.vscode
 
 reports/*
 !reports/Readme
