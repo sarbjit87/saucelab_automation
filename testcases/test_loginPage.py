@@ -1,20 +1,28 @@
-from common.base import TestBaseClass
+from common.base_testcase import TestBaseClass
+from pageObjects.LoginPage import LoginPage
 
-class TestTwo(TestBaseClass):
-    
-    def test_case2(self):
-        self.log.info("Running test 2")
-        # Open the URL in the browser
-        self.driver.get("http://www.yahoo.com")
+class TestLogin(TestBaseClass):
 
-        # Get the title of the Page
-        print("Title of the webpage is {}".format(self.driver.title))
+    def test_logininvalidpassword(self):
+        self.log.info("Running test for standard user and invalid password")
+        self.loginPage = LoginPage(self.driver)
+        self.loginPage.do_login("standard_user", "InvalidPassword")
+        assert self.loginPage.get_error_message() == "Epic sadface: Username and password do " \
+                                                     "not match any user in this service"
+    def test_loginlockeduser(self):
+        self.log.info("Running test for locked user and valid password")
+        self.loginPage = LoginPage(self.driver)
+        self.loginPage.do_login("locked_out_user", "secret_sauce")
+        assert self.loginPage.get_error_message() == "Epic sadface: Sorry, this user has been locked out."
 
-    def test_case3(self):
-        self.log.info("Running test 3")
-        # Open the URL in the browser
-        self.driver.get("http://www.reddit.com")
+    def test_loginwithnousername(self):
+        self.log.info("Running test for empty user and valid password")
+        self.loginPage = LoginPage(self.driver)
+        self.loginPage.do_login("", "secret_sauce")
+        assert self.loginPage.get_error_message() == "Epic sadface: Username is required"
 
-        # Get the title of the Page
-        print("Title of the webpage is {}".format(self.driver.title))
-        assert False
+    def test_loginwithnopassword(self):
+        self.log.info("Running test for standard user and empty password")
+        self.loginPage = LoginPage(self.driver)
+        self.loginPage.do_login("standard_user", "")
+        assert self.loginPage.get_error_message() == "Epic sadface: Password is required"

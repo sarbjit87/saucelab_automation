@@ -6,7 +6,6 @@ from datetime import datetime
 import logging
 
 
-@pytest.hookimpl(tryfirst=True)
 def pytest_configure(config):
     """ Create a log file if log_file is not mentioned in *.ini file"""
     timestamp = datetime.strftime(datetime.now(), '%Y-%m-%d_%H-%M-%S')
@@ -69,6 +68,7 @@ def driver_get(request, browser_name):
                                    options=firefox_options,
                                    firefox_profile=firefox_profile)
     
+    driver.get(Config.BASE_URL)
     yield driver
     print("Closing Browser")
     driver.quit()
